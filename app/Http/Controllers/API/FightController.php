@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;;
+use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Fights\FightManager;

@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Robots\RobotManager;
-use App\Imports\RobotsImport;
-use Maatwebsite\Excel\Facades\Excel;
 
 class RobotController extends BaseController
 {
@@ -93,22 +91,5 @@ class RobotController extends BaseController
         $robotManager = new RobotManager();
         $robotManager->delete($id);
         return $this->returnResponse($robotManager);
-    }
-
-    /**
-     * Imports robot via CSV file
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function import(Request $request)
-    {
-        $input = $request->file('file');
-        // Excel::import(new RobotsImport, $input);
-        
-        // return back();
-        // $robotManager = new RobotManager();
-        // $robotManager->import($input);
-        // return $this->returnResponse($robotManager);
     }
 }

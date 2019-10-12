@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Imports;
+namespace App\Models\Imports;
 
-use App\Robot\Robot;
+use App\Models\Robots\Robot;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 

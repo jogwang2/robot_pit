@@ -26,7 +26,7 @@ Route::post('robots', 'API\RobotController@create');
 Route::put('robots/{id}', 'API\RobotController@update');
 Route::delete('robots/{id}', 'API\RobotController@delete');
 // CSV IMPORT
-Route::post('robots/import', 'API\RobotController@import');
+Route::post('robots/import', 'API\ImportController@import');
 // FIGHT API
 Route::get('fights/{count}', 'API\FightController@getLatestRobotFights');
 Route::post('fight', 'API\FightController@fight');

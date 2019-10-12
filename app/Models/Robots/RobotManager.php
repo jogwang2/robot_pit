@@ -61,7 +61,6 @@ class RobotManager extends BaseManager
      */
 	public function create($input)
 	{
-		// validate inputs
 		$settings = [
             'user_id' => 'required',
             'name' => 'required',
@@ -69,6 +68,8 @@ class RobotManager extends BaseManager
             'weight' => 'required',
             'power' => 'required'
         ];
+
+        // validate inputs
 		$res = RobotValidator::isValidInputs($input, $settings);
 		if(!$res['isValid']){
             $this->setResponse(false, 'Validation Error.', $res['errors'], 400);
@@ -92,13 +93,14 @@ class RobotManager extends BaseManager
      */
 	public function update($id, $input)
 	{
-		// validate inputs
 		$settings = [
             'name' => 'required',
             'speed' => 'required',
             'weight' => 'required',
             'power' => 'required'
         ];
+
+        // validate inputs
 		$res = RobotValidator::isValidInputs($input, $settings);
 		if(!$res['isValid']){
             $this->setResponse(false, 'Validation Error.', $res['errors'], 400);
