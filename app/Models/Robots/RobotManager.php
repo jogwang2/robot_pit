@@ -2,6 +2,8 @@
 
 namespace App\Models\Robots;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Models\BaseManager;
 use App\Models\Robots\Robot;
 use App\Models\Robots\RobotValidator;
@@ -27,7 +29,7 @@ class RobotManager extends BaseManager
      *
      * @param  int  $id  (user id)
      */
-	public function getRobots(int $id)
+	public function getRobots($id)
 	{
 		try {
             $robots = Robot::whereUserId($id)->get();
@@ -36,6 +38,21 @@ class RobotManager extends BaseManager
             $this->setResponse(false, 'Error encountered when retrieving robots.', $ex->getMessage(), 500);
         }
 	}
+
+    public function getTopRobots($count)
+    {
+        try {
+            $robots = DB::table('robot_fight_record')
+                            ->select('robot_id', 'name', 'fights', 'wins', 'losses')
+                            ->orderBy('wins', 'desc')
+                            ->orderBy('losses', 'asc')
+                            ->limit($count)
+                            ->get();
+            $this->setResponse(true, 'Top robots retrieved successfully.', $robots->toArray());
+        } catch(\Exception $ex){
+            $this->setResponse(false, 'Error encountered when retrieving top robots.', $ex->getMessage(), 500);
+        }
+    }
 
 	/**
      * Inserts robot record to the database
@@ -114,7 +131,7 @@ class RobotManager extends BaseManager
      *
      * @param  int  $id  (robot id)
      */
-	public function delete(int $id)
+	public function delete($id)
 	{
 
         try {

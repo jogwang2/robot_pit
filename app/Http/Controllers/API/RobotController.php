@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Robots\RobotManager;
@@ -22,6 +23,7 @@ class RobotController extends BaseController
         $robotManager->getAllRobots();
         return $this->returnResponse($robotManager);      
     }
+
     /**
      * Retrieves all robots.
      *
@@ -35,6 +37,21 @@ class RobotController extends BaseController
         return $this->returnResponse($robotManager);      
     }
 
+    /**
+     * Retrieves top performing robots (limited by $count).
+     *
+     * @param  int  $count
+     * @return \Illuminate\Http\Response
+     */
+    public function getTopRobots(int $count)
+    {
+        if(!$count) {
+            $count = Config::get('constants.top_robot_count');
+        }
+        $robotManager = new RobotManager();
+        $robotManager->getTopRobots($count);
+        return $this->returnResponse($robotManager);      
+    }
 
     /**
      * Creates a robot
@@ -49,7 +66,6 @@ class RobotController extends BaseController
         $robotManager->create($input);
         return $this->returnResponse($robotManager);
     }
-
 
     /**
      * Updates the robot
@@ -66,7 +82,6 @@ class RobotController extends BaseController
         return $this->returnResponse($robotManager);
     }
 
-
     /**
      * Deletes the robot
      *
@@ -79,7 +94,6 @@ class RobotController extends BaseController
         $robotManager->delete($id);
         return $this->returnResponse($robotManager);
     }
-
 
     /**
      * Imports robot via CSV file
