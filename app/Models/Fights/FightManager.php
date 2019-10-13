@@ -3,6 +3,7 @@
 namespace App\Models\Fights;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\BaseManager;
 use App\Models\Robots\Robot;
@@ -20,6 +21,8 @@ class FightManager extends BaseManager
      */
 	public function fight($user, $input)
 	{
+    	Log::info('Executing fight.', $input);
+
 		$settings = [
             'attacker_id' => 'required',
             'defender_id' => 'required',
@@ -43,7 +46,9 @@ class FightManager extends BaseManager
         try {
             $robotFight = RobotFights::create($input);
             $this->evaluateFight($robotFight->id, $input);
+            Log::info('Executing fight successful.');
         } catch(\Exception $ex){
+            Log::error('Executing fight failed.', ['error' => $ex->getMessage()]);
             $this->setResponse(false, 'Error encountered when inserting robot fight.', $ex->getMessage(), 500);
         }
 	}
@@ -55,6 +60,8 @@ class FightManager extends BaseManager
      */
 	public function getLatestRobotFights($count)
 	{
+    	Log::info('Getting latest fights.');
+
 		try {
 			// get top $count of 
 			$matches = DB::table('robot_fights')
@@ -66,9 +73,10 @@ class FightManager extends BaseManager
 
 			$result = $this->getRobotNamesFromMatches($matches);
 
+    		Log::info('Getting latest fights successful.');
 			$this->setResponse(true, 'Robot Fight Results retrieved successfully.', $result);
-
         } catch(\Exception $ex){
+            Log::error('Getting latest fights failed.', ['error' => $ex->getMessage()]);
             $this->setResponse(false, 'Error encountered when retrieving robot fight results.', $ex->getMessage(), 500);
         }
 	}
@@ -81,6 +89,8 @@ class FightManager extends BaseManager
      */
 	private function evaluateFight($fightId, $input)
 	{
+		Log::debug('Executing evaluateFight.');
+
 		// set default results
 		$fightRes = [
 			'fight_id'   => $fightId,
@@ -103,6 +113,7 @@ class FightManager extends BaseManager
             $robotFightResult = RobotFightResults::create($fightRes);
             $this->setResponse(true, 'Robot Fight Results recorded successfully.', $robotFightResult->toArray());
         } catch(\Exception $ex){
+            Log::error('Getting latest fights failed.', ['error' => $ex->getMessage()]);
             $this->setResponse(false, 'Error encountered when inserting robot fight result.', $ex->getMessage(), 500);
         }
 	}
@@ -114,6 +125,7 @@ class FightManager extends BaseManager
      */
 	private function calculateRobotWinRate($robotId)
 	{
+		Log::debug('Executing calculateRobotWinRate.');
 		$robot = Robot::whereId($robotId)->first();
 		return ($robot->speed + $robot->power) / (0.25 * $robot->weight);
 	}
@@ -126,6 +138,7 @@ class FightManager extends BaseManager
      */
 	private function getRobotNamesFromMatches($matches)
 	{
+		Log::debug('Executing getRobotNamesFromMatches.');
 		$res = [];
 		$n = 0;
 
@@ -146,6 +159,7 @@ class FightManager extends BaseManager
      */
 	private function getRobotNamesFromMatchRows($match)
 	{
+		Log::debug('Executing getRobotNamesFromMatchRows.');
 		$res = [
 			'robot_1' => $this->getRobotIdAndName($match->attacker_id),
 			'robot_2' => $this->getRobotIdAndName($match->defender_id),
@@ -163,6 +177,7 @@ class FightManager extends BaseManager
      */
 	private function getRobotIdAndName($robotId)
 	{
+		Log::debug('Executing getRobotIdAndName.');
 		$res = [
 			'id'   => $robotId,
 			'name' => Robot::whereId($robotId)->value('name')

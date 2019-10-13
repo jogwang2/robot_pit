@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Validator;
+use Illuminate\Support\Facades\Log;
 
 abstract class BaseValidator
 {
@@ -15,6 +16,8 @@ abstract class BaseValidator
      */
 	public static function isValidInputs($input, $settings)
     {
+        Log::debug('Validating inputs against settings.', [ 'input' => $input, 'settings' => $settings]);
+
     	$res = array(
             'isValid' => true,
             'errors' => []
@@ -23,10 +26,12 @@ abstract class BaseValidator
         $validator = Validator::make($input, $settings);
 
         if($validator->fails()){
+            Log::debug('Validation failed.', ['error' => $validator->errors()]);
             $res['isValid'] = false;
             $res['errors'] = $validator->errors();    
         }
 
+        Log::debug('Validation success.');
         return $res;
     }
 }

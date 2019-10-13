@@ -5,6 +5,7 @@ namespace App\Models\Users;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 use App\Models\BaseManager;
@@ -20,6 +21,8 @@ class UserManager extends BaseManager
      */
     public function register($input)
     {
+        Log::info('Registering user.');
+
         $settings = [
             'name' => 'required',
             'email' => 'required|email',
@@ -44,8 +47,10 @@ class UserManager extends BaseManager
             $success['token'] =  $user->createToken('Personal Access Token')->accessToken;
             $success['name'] =  $user->name;
 
+            Log::info('Registering user successful.');
             $this->setResponse(true, 'User registered successfully.', $success);
         } catch(\Exception $ex){
+            Log::error('Registering user failed.', ['error' => $ex->getMessage()]);
             $this->setResponse(false, 'Error encountered when registering user.', $ex->getMessage(), 500);
         }
     }
@@ -58,6 +63,8 @@ class UserManager extends BaseManager
      */
     public function login($input)
     {
+        Log::info('Logging in user.');
+
         $settings = [
             'email' => 'required|string|email',
             'password' => 'required|string'
@@ -90,6 +97,7 @@ class UserManager extends BaseManager
             'token_type' => 'Bearer'
         ];
 
+        Log::info('Logging in user successful.');
         $this->setResponse(true, 'Login successfully.', $data);
     }
 
@@ -100,7 +108,9 @@ class UserManager extends BaseManager
      */
     public function logout($user)
     {
+        Log::info('Logging out user.');
         $user->token()->revoke();
+        Log::info('Logging out user successful.');
         $this->setResponse(true, 'Logout successfully.', null);
     }
 }
