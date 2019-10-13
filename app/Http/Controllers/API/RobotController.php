@@ -15,24 +15,69 @@ class RobotController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function show(Request $request)
     {
+        $user = $request->user();
         $robotManager = new RobotManager();
-        $robotManager->getAllRobots();
-        return $this->returnResponse($robotManager);      
+        $robotManager->getRobots($user);
+        return $this->returnResponse($robotManager);
     }
 
     /**
-     * Retrieves all robots.
+     * Creates a robot
      *
-     * @param  int  $user_id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getAll(int $user_id)
+    public function create(Request $request)
     {
+        $user = $request->user();
+        $input = $request->all();
         $robotManager = new RobotManager();
-        $robotManager->getRobots($user_id);
-        return $this->returnResponse($robotManager);      
+        $robotManager->create($user, $input);
+        return $this->returnResponse($robotManager);
+    }
+
+    /**
+     * Updates the robot
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, int $id)
+    {
+        $user = $request->user();
+        $input = $request->all();
+        $robotManager = new RobotManager();
+        $robotManager->update($user, $id, $input);
+        return $this->returnResponse($robotManager);
+    }
+
+    /**
+     * Deletes the robot
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Request $request, int $id)
+    {
+        $user = $request->user();
+        $robotManager = new RobotManager();
+        $robotManager->delete($user, $id);
+        return $this->returnResponse($robotManager);
+    }
+
+    /**
+     * Retrieves all robots per user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAll()
+    {   
+        $robotManager = new RobotManager();
+        $robotManager->getAllRobots();
+        return $this->returnResponse($robotManager);   
     }
 
     /**
@@ -49,47 +94,5 @@ class RobotController extends BaseController
         $robotManager = new RobotManager();
         $robotManager->getTopRobots($count);
         return $this->returnResponse($robotManager);      
-    }
-
-    /**
-     * Creates a robot
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        $input = $request->all();
-        $robotManager = new RobotManager();
-        $robotManager->create($input);
-        return $this->returnResponse($robotManager);
-    }
-
-    /**
-     * Updates the robot
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, int $id)
-    {
-        $input = $request->all();
-        $robotManager = new RobotManager();
-        $robotManager->update($id, $input);
-        return $this->returnResponse($robotManager);
-    }
-
-    /**
-     * Deletes the robot
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function delete(int $id)
-    {
-        $robotManager = new RobotManager();
-        $robotManager->delete($id);
-        return $this->returnResponse($robotManager);
     }
 }

@@ -18,9 +18,10 @@ class FightController extends BaseController
      */
     public function fight(Request $request)
     {
+        $user = $request->user();
         $input = $request->all();
         $fightManager = new FightManager();
-        $fightManager->fight($input);
+        $fightManager->fight($user, $input);
         return $this->returnResponse($fightManager);    
     }
 

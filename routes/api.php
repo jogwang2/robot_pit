@@ -13,22 +13,40 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
+// AUTH
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('login', 'API\UserController@login');
+    Route::post('register', 'API\UserController@register');
+  
+    Route::group([
+      'middleware' => 'auth:api'
+    ], function() {
+    	// LOGOUT
+        Route::get('logout', 'API\UserController@logout');
+    });
+});
 
-// });
+// AUTHENTICATED API
+Route::group([
+  'middleware' => 'auth:api'
+], function() {
+	// ROBOT CRUD
+	Route::get('robots', 'API\RobotController@show');
+	Route::post('robots', 'API\RobotController@create');
+	Route::put('robots/{id}', 'API\RobotController@update');
+	Route::delete('robots/{id}', 'API\RobotController@delete');
+	// CSV IMPORT
+	Route::post('robots/import', 'API\ImportController@import');
+	// FIGHT API
+	Route::post('fight', 'API\FightController@fight');
+});
 
-// ROBOT CRUD
-Route::get('robots', 'API\RobotController@index');
-Route::get('robots/{user_id}', 'API\RobotController@getAll');
+// UNAUTHENTICATED API (FOR GUEST VIEW)
+//Route::get('robots/all', 'API\RobotController@getAll'); // comment out to view all robots
 Route::get('robots/ranking/{count}', 'API\RobotController@getTopRobots');
-Route::post('robots', 'API\RobotController@create');
-Route::put('robots/{id}', 'API\RobotController@update');
-Route::delete('robots/{id}', 'API\RobotController@delete');
-// CSV IMPORT
-Route::post('robots/import', 'API\ImportController@import');
-// FIGHT API
 Route::get('fights/{count}', 'API\FightController@getLatestRobotFights');
-Route::post('fight', 'API\FightController@fight');
+
 
 

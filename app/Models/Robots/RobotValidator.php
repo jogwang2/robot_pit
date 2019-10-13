@@ -13,7 +13,7 @@ class RobotValidator extends BaseValidator
      * @param  int $id (robot id)
      * @return array [isExists, message, data]
      */
-    public static function validateRobotExists($id)
+    public static function validateRobotExists($id, $userId)
     {
         $res = array(
             'isExists' => true,
@@ -21,10 +21,12 @@ class RobotValidator extends BaseValidator
             'data' => []
         );
 
-        $robot = Robot::find($id);
+        // check robot existence
+        $robot = Robot::whereIdAndUserId($id, $userId)->first();
         if (!$robot) {
             $res['isExists'] = false;
-            $res['message'] = sprintf('Not Found Exception Error. Robot [%d] does not exists.', $id);
+            $res['message'] = 'Not Found Exception Error. The robot does not exists or is not your robot.';
+            return $res;
         }
 
         $res['data'] = $robot;

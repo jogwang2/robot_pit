@@ -2,7 +2,6 @@
 
 namespace App\Models\Fights;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\BaseManager;
@@ -16,9 +15,10 @@ class FightManager extends BaseManager
 	/**
      * Fights another robot
      *
+     * @param  User  $user
      * @param  array $input
      */
-	public function fight($input)
+	public function fight($user, $input)
 	{
 		$settings = [
             'attacker_id' => 'required',
@@ -32,19 +32,12 @@ class FightManager extends BaseManager
             return;
         }
 
-        // check attacker robot fight count
-        $attackerCount = $this->checkFightCount('attacker_id', $input['attacker_id']);
-      	if($attackerCount == Config::get('constants.fights.max_attack_count')) {
-            $this->setResponse(false, 'Validation Error.', 'Maximum allowable attack count reached.', 400);
+        // validate fighting robots
+        $res = FightValidator::validateFightingRobots($user->id, $input);
+		if(!$res['isValid']){
+            $this->setResponse(false, 'Validation Error.', $res['message'], 400);
             return;
-      	}
-
-      	// check defender robot fight count
-        $defenderCount = $this->checkFightCount('defender_id', $input['defender_id']);
-      	if($defenderCount == Config::get('constants.fights.max_defense_count')) {
-            $this->setResponse(false, 'Validation Error.', 'This robot can no longer be attacked.', 400);
-            return;
-      	}
+        }
         
         // insert fight record in db
         try {
@@ -83,19 +76,6 @@ class FightManager extends BaseManager
 	/**
      * Fights another robot
      *
-     * @param  string $robotCol
-     * @param  int $robotId
-     * @return int count
-     */
-	private function checkFightCount($robotCol, $robotId)
-	{
-		return RobotFights::where($robotCol, '=', $robotId)
-        		->whereDate('created_at', '>=', Carbon::now())->count();
-	}
-
-	/**
-     * Fights another robot
-     *
      * @param  int $fightId
      * @param  array $input
      */
@@ -113,7 +93,7 @@ class FightManager extends BaseManager
 		$defenderPoints = $this->calculateRobotWinRate($input['defender_id']);
 
 		// evaluate points and set winner/loser accordingly
-		if($defenderPoints > $attackerPoints) {
+		if($defenderPoints >= $attackerPoints) {
 			$fightRes['winner_id'] = $input['defender_id'];
 			$fightRes['loser_id'] = $input['attacker_id'];
 		}
@@ -135,7 +115,7 @@ class FightManager extends BaseManager
 	private function calculateRobotWinRate($robotId)
 	{
 		$robot = Robot::whereId($robotId)->first();
-		return ($robot->speed + $robot->power) / 0.25 * $robot->weight;
+		return ($robot->speed + $robot->power) / (0.25 * $robot->weight);
 	}
 
 	/**

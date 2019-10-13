@@ -13,13 +13,15 @@ use App\Models\Robots\Robot;
 class ImportManager extends BaseManager
 {
     /**
-     * Performs bulk process to the database
+     * Performs bulk create robots
      *
+     * @param  User  $user
      * @param  file  $input
      */
-    public function import($user_id, $input)
+    public function import($user, $input)
     {
-        // TODO: find ways to improve performance when CSV records becomes too much
+        // TODO: find ways to improve performance when CSV records becomes too much (by the thousands)
+        // Maybe break file into chunks and create async jobs
         try {
             // get csv contents
             $data = Excel::toArray(new RobotsImport, $input);
@@ -30,7 +32,7 @@ class ImportManager extends BaseManager
             	return;
             }
 
-	        $this->importToRobotTable($user_id, $data);
+	        $this->importToRobotTable($user->id, $data);
 
             $this->setResponseNoData(true, 'CSV file imported successfully.');
         } catch (\Exception $ex){
@@ -38,6 +40,12 @@ class ImportManager extends BaseManager
         }
     }
 
+    /**
+     * Assigns user id to each rows and saves them to robots table
+     *
+     * @param  int   $user_id
+     * @param  array $data
+     */
     private function importToRobotTable($user_id, $data)
     {
     	$uid = array('user_id' => $user_id);

@@ -18,11 +18,11 @@ class ImportController extends BaseController
      */
     public function import(Request $request)
     {
-        $user_id = $request->input('user_id');
+        $user = $request->user();
         $input = $request->file('file');
 
         $importtManager = new ImportManager();
-        $importtManager->import($user_id, $input);
+        $importtManager->import($user, $input);
         return $this->returnResponse($importtManager);
     }
 }
