@@ -35,8 +35,8 @@ Route::group([
 	// ROBOT CRUD
 	Route::get('robots', 'API\RobotController@show');
 	Route::post('robots', 'API\RobotController@create');
-	Route::put('robots/{id}', 'API\RobotController@update');
-	Route::delete('robots/{id}', 'API\RobotController@delete');
+	Route::put('robots', 'API\RobotController@update');
+	Route::delete('robots', 'API\RobotController@delete');
 	// CSV IMPORT
 	Route::post('robots/import', 'API\ImportController@import');
 	// FIGHT API

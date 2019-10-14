@@ -42,29 +42,29 @@ class RobotController extends BaseController
      * Updates the robot
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request)
     {
         $user = $request->user();
         $input = $request->all();
         $robotManager = new RobotManager();
-        $robotManager->update($user, $id, $input);
+        $robotManager->update($user, $input);
         return $this->returnResponse($robotManager);
     }
 
     /**
      * Deletes the robot
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request, int $id)
+    public function delete(Request $request)
     {
         $user = $request->user();
+        $input = $request->all();
         $robotManager = new RobotManager();
-        $robotManager->delete($user, $id);
+        $robotManager->delete($user, $input['id']);
         return $this->returnResponse($robotManager);
     }
 

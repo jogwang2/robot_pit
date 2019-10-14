@@ -75,12 +75,11 @@ class RobotManager extends BaseManager
      * Updates robot record in the database
      *
      * @param  User  $user
-     * @param  int   $id  (robot id)
      * @param  array $input  (robot inputs)
      */
-	public function update($user, $id, $input)
+	public function update($user, $input)
 	{
-        Log::info('Updating a robot.', ['robot_id' => $id, 'inputs' => $input]);
+        Log::info('Updating a robot.', ['inputs' => $input]);
 
 		$settings = [
             'name' => 'required',
@@ -98,6 +97,7 @@ class RobotManager extends BaseManager
 
         try {
         	// check if robot exists
+            $id = $input['id'];
             $result = RobotValidator::validateRobotExists($id, $user->id);
             if(!$result['isExists']) {
 	            $this->setResponse(false, $result['message'], null, 404);
