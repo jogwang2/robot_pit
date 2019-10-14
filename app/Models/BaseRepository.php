@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-abstract class BaseManager
+abstract class BaseRepository
 {
 	public $success;
 	public $code;

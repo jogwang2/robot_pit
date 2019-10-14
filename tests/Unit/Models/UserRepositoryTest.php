@@ -6,9 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Tests\Unit\Helpers\TestHelper;
-use App\Models\Users\UserManager;
+use App\Models\Users\UserRepository;
 
-class UserManagerTest extends TestCase
+class UserRepositoryTest extends TestCase
 {
     /**
      * Test register user return success
@@ -17,10 +17,10 @@ class UserManagerTest extends TestCase
      */
     public function testRegisterReturnSuccess()
     {
-        $userManager = new UserManager();
-    	TestHelper::createUser($userManager);
+        $userRepository = new UserRepository();
+    	TestHelper::createUser($userRepository);
 
-        $this->assertTrue($userManager->success);
+        $this->assertTrue($userRepository->success);
 
         // remove registered user in DB after test
         TestHelper::removeUser();
@@ -38,11 +38,11 @@ class UserManagerTest extends TestCase
             'email' => 'qwedcvgh123luv98@email.php',
             'password' => 'password',
     	];
-    	$userManager = new UserManager();
-    	$userManager->register($input);
+    	$userRepository = new UserRepository();
+    	$userRepository->register($input);
 
-        $this->assertFalse($userManager->success);
-        $this->assertTrue($userManager->message === 'Validation Error.');
+        $this->assertFalse($userRepository->success);
+        $this->assertTrue($userRepository->message === 'Validation Error.');
     }
 
     /**
@@ -52,14 +52,14 @@ class UserManagerTest extends TestCase
      */
     public function testRegisterReturnExceptionFail()
     {
-        $userManager = new UserManager();
-        TestHelper::createUser($userManager);
+        $userRepository = new UserRepository();
+        TestHelper::createUser($userRepository);
     	
     	// register the same user again to catch unique users error
-        TestHelper::createUser($userManager);
+        TestHelper::createUser($userRepository);
 
-        $this->assertFalse($userManager->success);
-        $this->assertTrue($userManager->message === 'Error encountered when registering user.');
+        $this->assertFalse($userRepository->success);
+        $this->assertTrue($userRepository->message === 'Error encountered when registering user.');
 
         // remove registered user in DB after test
         TestHelper::removeUser();
@@ -73,17 +73,17 @@ class UserManagerTest extends TestCase
     public function testLoginReturnSuccess()
     {
 		// register user
-        $userManager = new UserManager();
-        TestHelper::createUser($userManager);
+        $userRepository = new UserRepository();
+        TestHelper::createUser($userRepository);
 
     	// login user
     	$input = [
             'email' => 'qwedcvgh123luv98@email.php',
             'password' => 'password'
     	];
-    	$userManager->login($input);
+    	$userRepository->login($input);
 
-        $this->assertTrue($userManager->success);
+        $this->assertTrue($userRepository->success);
 
         // remove registered user in DB after test
         TestHelper::removeUser();
@@ -101,11 +101,11 @@ class UserManagerTest extends TestCase
             'email' => 'email',
             'password' => 'password'
     	];
-    	$userManager = new UserManager();
-    	$userManager->login($input);
+    	$userRepository = new UserRepository();
+    	$userRepository->login($input);
 
-        $this->assertFalse($userManager->success);
-        $this->assertTrue($userManager->message === 'Validation Error.');
+        $this->assertFalse($userRepository->success);
+        $this->assertTrue($userRepository->message === 'Validation Error.');
     }
 
     /**
@@ -120,10 +120,10 @@ class UserManagerTest extends TestCase
             'email' => 'test@email.php',
             'password' => 'password'
     	];
-    	$userManager = new UserManager();
-    	$userManager->login($input);
+    	$userRepository = new UserRepository();
+    	$userRepository->login($input);
 
-        $this->assertFalse($userManager->success);
-        $this->assertTrue($userManager->message === 'Unauthorized');
+        $this->assertFalse($userRepository->success);
+        $this->assertTrue($userRepository->message === 'Unauthorized');
     }
 }

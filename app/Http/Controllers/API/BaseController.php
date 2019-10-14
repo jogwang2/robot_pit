@@ -44,15 +44,15 @@ class BaseController extends Controller
     /**
      * Sends response
      *
-     * @param  BaseManager  $baseManager
+     * @param  BaseRepository  $baseRepository
      * @return \Illuminate\Http\Response
      */
-    public function returnResponse($baseManager)
+    public function returnResponse($baseRepository)
     {
-        if(!$baseManager->success) {
-            return $this->sendError($baseManager->message, $baseManager->data, $baseManager->code);
+        if(!$baseRepository->success) {
+            return $this->sendError($baseRepository->message, $baseRepository->data, $baseRepository->code);
         }
 
-        return $this->sendResponse($baseManager->data, $baseManager->message);
+        return $this->sendResponse($baseRepository->data, $baseRepository->message);
     }
 }

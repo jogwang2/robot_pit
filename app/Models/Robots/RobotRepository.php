@@ -2,24 +2,26 @@
 
 namespace App\Models\Robots;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\BaseManager;
+use App\Models\BaseRepository;
 use App\Models\Robots\Robot;
 use App\Models\Robots\RobotValidator;
 
-class RobotManager extends BaseManager
+class RobotRepository extends BaseRepository
 {
 	
 	/**
      * Retrieves all robots per user.
      *
-     * @param  User  $user
+     * @return null
      */
-	public function getRobots($user)
+	public function getRobots()
 	{
         Log::info('Retrieving all user`s robots.');
+        $user = Auth::user();
 
 		try {
             $id = $user->id;
@@ -36,12 +38,13 @@ class RobotManager extends BaseManager
 	/**
      * Inserts robot record to the database
      *
-     * @param  User  $user
      * @param  array $input  (robot inputs)
+     * @return null
      */
-	public function create($user, $input)
+	public function create($input)
 	{
         Log::info('Creating a robot.', $input);
+        $user = Auth::user();
 
 		$settings = [
             'user_id' => 'required',
@@ -74,12 +77,14 @@ class RobotManager extends BaseManager
 	/**
      * Updates robot record in the database
      *
-     * @param  User  $user
+     * @param  array $id  (robot id)
      * @param  array $input  (robot inputs)
+     * @return null
      */
-	public function update($user, $input)
+	public function update($id, $input)
 	{
         Log::info('Updating a robot.', ['inputs' => $input]);
+        $user = Auth::user();
 
 		$settings = [
             'name' => 'required',
@@ -97,7 +102,6 @@ class RobotManager extends BaseManager
 
         try {
         	// check if robot exists
-            $id = $input['id'];
             $result = RobotValidator::validateRobotExists($id, $user->id);
             if(!$result['isExists']) {
 	            $this->setResponse(false, $result['message'], null, 404);
@@ -123,10 +127,12 @@ class RobotManager extends BaseManager
      * Deletes the robot record in the database
      *
      * @param  int  $id  (robot id)
+     * @return null
      */
-	public function delete($user, $id)
+	public function delete($id)
 	{
         Log::info('Deleting robot '. $id);
+        $user = Auth::user();
 
         try {
             // check if robot exists
@@ -151,6 +157,7 @@ class RobotManager extends BaseManager
     /**
      * Retrieves all robots.
      *
+     * @return null
      */
     public function getAllRobots()
     {
@@ -171,6 +178,7 @@ class RobotManager extends BaseManager
      * Retrieves top performing robots limited by $count
      *
      * @param  int  $count
+     * @return null
      */
     public function getTopRobots($count)
     {

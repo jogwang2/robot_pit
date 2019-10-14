@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Imports\ImportManager;
+use App\Models\Imports\ImportRepository;
 
 class ImportController extends BaseController
 {
@@ -18,11 +18,10 @@ class ImportController extends BaseController
      */
     public function import(Request $request)
     {
-        $user = $request->user();
         $input = $request->file('file');
 
-        $importtManager = new ImportManager();
-        $importtManager->import($user, $input);
-        return $this->returnResponse($importtManager);
+        $importtRepository = new ImportRepository();
+        $importtRepository->import($input);
+        return $this->returnResponse($importtRepository);
     }
 }

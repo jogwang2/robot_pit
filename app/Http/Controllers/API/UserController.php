@@ -6,7 +6,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Users\UserManager;
+use App\Models\Users\UserRepository;
 
 class UserController extends BaseController
 {
@@ -20,9 +20,9 @@ class UserController extends BaseController
     {
         $input = $request->all();
 
-        $userManager = new UserManager();
-        $userManager->register($input);
-        return $this->returnResponse($userManager);
+        $userRepository = new UserRepository();
+        $userRepository->register($input);
+        return $this->returnResponse($userRepository);
     }
 
     /**
@@ -35,9 +35,9 @@ class UserController extends BaseController
     {
         $input = $request->all();
 
-        $userManager = new UserManager();
-        $userManager->login($input);
-        return $this->returnResponse($userManager);
+        $userRepository = new UserRepository();
+        $userRepository->login($input);
+        return $this->returnResponse($userRepository);
     }
 
     /**
@@ -48,10 +48,8 @@ class UserController extends BaseController
      */
     public function logout(Request $request)
     {
-        $user = $request->user();
-
-        $userManager = new UserManager();
-        $userManager->logout($user);
-        return $this->returnResponse($userManager);
+        $userRepository = new UserRepository();
+        $userRepository->logout();
+        return $this->returnResponse($userRepository);
     }
 }

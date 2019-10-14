@@ -33,10 +33,10 @@ Route::group([
   'middleware' => 'auth:api'
 ], function() {
 	// ROBOT CRUD
-	Route::get('robots', 'API\RobotController@show');
+	Route::get('robots', 'API\RobotController@getRobots');
 	Route::post('robots', 'API\RobotController@create');
-	Route::put('robots', 'API\RobotController@update');
-	Route::delete('robots', 'API\RobotController@delete');
+	Route::put('robots/{id}', 'API\RobotController@update');
+	Route::delete('robots/{id}', 'API\RobotController@delete');
 	// CSV IMPORT
 	Route::post('robots/import', 'API\ImportController@import');
 	// FIGHT API

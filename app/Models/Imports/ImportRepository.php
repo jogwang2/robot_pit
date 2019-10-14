@@ -2,26 +2,28 @@
 
 namespace App\Models\Imports;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
-use App\Models\BaseManager;
+use App\Models\BaseRepository;
 use App\Models\Imports\Import;
 use App\Models\Imports\RobotsImport;
 use App\Models\Robots\Robot;
 
-class ImportManager extends BaseManager
+class ImportRepository extends BaseRepository
 {
     /**
      * Performs bulk create robots
      *
-     * @param  User  $user
      * @param  file  $input
+     * @return null
      */
-    public function import($user, $input)
+    public function import($input)
     {
         Log::info('Importing robots.');
+        $user = Auth::user();
 
         // TODO: find ways to improve performance when CSV records becomes too much (by the thousands)
         // Maybe break file into chunks and create async jobs
@@ -50,6 +52,7 @@ class ImportManager extends BaseManager
      *
      * @param  int   $user_id
      * @param  array $data
+     * @return null
      */
     private function importToRobotTable($user_id, $data)
     {

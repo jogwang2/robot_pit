@@ -8,16 +8,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 
-use App\Models\BaseManager;
+use App\Models\BaseRepository;
 use App\Models\Users\User;
 use App\Models\Users\UserValidator;
 
-class UserManager extends BaseManager
+class UserRepository extends BaseRepository
 {
     /**
      * Registers a user
      *
      * @param array $input (user info)
+     * @return null
      */
     public function register($input)
     {
@@ -60,6 +61,7 @@ class UserManager extends BaseManager
      * Login user and create token
      *
      * @param array $input (user info)
+     * @return null
      */
     public function login($input)
     {
@@ -104,12 +106,14 @@ class UserManager extends BaseManager
     /**
      * Logout user (Revoke the token)
      *
-     * @param array $input (user info)
+     * @return null
      */
-    public function logout($user)
+    public function logout()
     {
         Log::info('Logging out user.');
-        $user->token()->revoke();
+        $user = Auth::user();
+        $token = $user->token();
+        $token->revoke();
         Log::info('Logging out user successful.');
         $this->setResponse(true, 'Logout successfully.', null);
     }

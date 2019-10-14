@@ -3,7 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use App\Models\Users\User;
-use App\Models\Users\UserManager;
+use App\Models\Users\UserRepository;
 
 class TestHelper
 {
@@ -12,7 +12,7 @@ class TestHelper
      *
      * @return void
      */
-    public static function createUser($userManager)
+    public static function createUser($userRepository)
     {
         $input = [
             'name' => 'qwedcvgh123luv98',
@@ -20,7 +20,7 @@ class TestHelper
             'password' => 'password',
             'confirm_password' => 'password'
         ];
-        $userManager->register($input);
+        $userRepository->register($input);
     }
 
     /**

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Fights\FightManager;
+use App\Models\Fights\FightRepository;
 
 class FightController extends BaseController
 {
@@ -18,11 +18,10 @@ class FightController extends BaseController
      */
     public function fight(Request $request)
     {
-        $user = $request->user();
         $input = $request->all();
-        $fightManager = new FightManager();
-        $fightManager->fight($user, $input);
-        return $this->returnResponse($fightManager);    
+        $fightRepository = new FightRepository();
+        $fightRepository->fight($input);
+        return $this->returnResponse($fightRepository);    
     }
 
 	/**
@@ -36,8 +35,8 @@ class FightController extends BaseController
     	if(!$count) {
     		$count = Config::get('constants.latest_fight_count');
     	}
-        $fightManager = new FightManager();
-        $fightManager->getLatestRobotFights($count);
-        return $this->returnResponse($fightManager);  
+        $fightRepository = new FightRepository();
+        $fightRepository->getLatestRobotFights($count);
+        return $this->returnResponse($fightRepository);  
     }
 }

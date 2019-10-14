@@ -2,26 +2,28 @@
 
 namespace App\Models\Fights;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\BaseManager;
+use App\Models\BaseRepository;
 use App\Models\Robots\Robot;
 use App\Models\Fights\RobotFights;
 use App\Models\Fights\RobotFightResults;
 use App\Models\Fights\FightValidator;
 
-class FightManager extends BaseManager
+class FightRepository extends BaseRepository
 {
 	/**
      * Fights another robot
      *
-     * @param  User  $user
      * @param  array $input
+     * @return null
      */
-	public function fight($user, $input)
+	public function fight($input)
 	{
     	Log::info('Executing fight.', $input);
+        $user = Auth::user();
 
 		$settings = [
             'attacker_id' => 'required',
@@ -57,6 +59,7 @@ class FightManager extends BaseManager
      * Get the latest fight results
      *
      * @param  int $count
+     * @return null
      */
 	public function getLatestRobotFights($count)
 	{
@@ -86,6 +89,7 @@ class FightManager extends BaseManager
      *
      * @param  int $fightId
      * @param  array $input
+     * @return null
      */
 	private function evaluateFight($fightId, $input)
 	{
@@ -122,6 +126,7 @@ class FightManager extends BaseManager
      * Fights another robot
      *
      * @param  int $robotId
+     * @return float 
      */
 	private function calculateRobotWinRate($robotId)
 	{
