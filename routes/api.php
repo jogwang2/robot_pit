@@ -45,8 +45,8 @@ Route::group([
 
 // UNAUTHENTICATED API (FOR GUEST VIEW)
 //Route::get('robots/all', 'API\RobotController@getAll'); // comment out to view all robots
-Route::get('robots/ranking/{count}', 'API\RobotController@getTopRobots');
-Route::get('fights/{count}', 'API\FightController@getLatestRobotFights');
+Route::get('robots/ranking', 'API\RobotController@getTopRobots');
+Route::get('fights', 'API\FightController@getLatestRobotFights');
 
 
 

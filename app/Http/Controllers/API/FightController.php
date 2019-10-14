@@ -27,14 +27,16 @@ class FightController extends BaseController
 	/**
      * Get latest robot fights
      *
-     * @param  int  $count
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getLatestRobotFights(int $count)
+    public function getLatestRobotFights(Request $request)
     {
+        $count = $request->count;
     	if(!$count) {
     		$count = Config::get('constants.latest_fight_count');
     	}
+        
         $fightRepository = new FightRepository();
         $fightRepository->getLatestRobotFights($count);
         return $this->returnResponse($fightRepository);  

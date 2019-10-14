@@ -80,14 +80,16 @@ class RobotController extends BaseController
     /**
      * Retrieves top performing robots (limited by $count).
      *
-     * @param  int  $count
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getTopRobots(int $count)
+    public function getTopRobots(Request $request)
     {
+        $count = $request->count;
         if(!$count) {
             $count = Config::get('constants.top_robot_count');
         }
+        
         $robotRepository = new RobotRepository();
         $robotRepository->getTopRobots($count);
         return $this->returnResponse($robotRepository);      
