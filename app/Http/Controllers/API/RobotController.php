@@ -46,6 +46,7 @@ class RobotController extends BaseController
      */
     public function update(Request $request, int $id)
     {
+        // TODO: implement route model binding that can handle 404 case
         $input = $request->all();
         $robotRepository = new RobotRepository();
         $robotRepository->update($id, $input);
@@ -60,6 +61,7 @@ class RobotController extends BaseController
      */
     public function delete(Request $request, int $id)
     {
+        // TODO: implement route model binding that can handle 404 case
         $robotRepository = new RobotRepository();
         $robotRepository->delete($id);
         return $this->returnResponse($robotRepository);
@@ -89,7 +91,7 @@ class RobotController extends BaseController
         if(!$count) {
             $count = Config::get('constants.top_robot_count');
         }
-        
+
         $robotRepository = new RobotRepository();
         $robotRepository->getTopRobots($count);
         return $this->returnResponse($robotRepository);      

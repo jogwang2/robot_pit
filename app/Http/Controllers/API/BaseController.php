@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller as Controller;
 
 class BaseController extends Controller
 {
+    // TODO: Implement response transformers if has more time (need to check on Laravel docs)
+
     /**
      * success response method.
      *
